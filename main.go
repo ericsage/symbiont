@@ -29,7 +29,7 @@ func getenv(key, fallback string) string {
 	return value
 }
 
-func streamNetwork(network io.ReadCloser) {
+func streamNetwork(network io.ReadCloser, out http.ResponseWriter) {
 	address := serverAddress + ":" + serverPort
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err == nil {
@@ -76,8 +76,10 @@ func streamNetwork(network io.ReadCloser) {
 			}()
 			waitc2 := make(chan struct{})
 			go func() {
+				encoder := json.NewEncoder(out)
 				for {
-					_, err := stream.Recv()
+					in, err := stream.Recv()
+					encoder.Encode(in.Element)
 					if err == io.EOF {
 						close(waitc2)
 						return
@@ -92,7 +94,7 @@ func streamNetwork(network io.ReadCloser) {
 }
 
 func requestHandler(res http.ResponseWriter, req *http.Request) {
-	streamNetwork(req.Body)
+	streamNetwork(req.Body, res)
 }
 
 func main() {
