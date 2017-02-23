@@ -15,8 +15,10 @@ import (
 )
 
 var (
-	serverAddress = getenv("SERVICE_ADDRESS", "127.0.0.1")
-	serverPort    = getenv("SERVICE_PORT", "8080")
+	listeningAddress = getenv("LISTENING_ADDRESS", "0.0.0.0")
+	listeningPort    = getenv("LISTENING_PORT", "80")
+	serverAddress    = getenv("SERVICE_ADDRESS", "127.0.0.1")
+	serverPort       = getenv("SERVICE_PORT", "8080")
 )
 
 func getenv(key, fallback string) string {
@@ -95,5 +97,6 @@ func requestHandler(res http.ResponseWriter, req *http.Request) {
 
 func main() {
 	http.HandleFunc("/", requestHandler)
-	log.Fatal(http.ListenAndServe(":80", nil))
+	address = listeningAddress + ":" + listeningPort
+	log.Fatal(http.ListenAndServe(address, nil))
 }
