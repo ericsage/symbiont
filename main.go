@@ -97,6 +97,6 @@ func requestHandler(res http.ResponseWriter, req *http.Request) {
 
 func main() {
 	http.HandleFunc("/", requestHandler)
-	address = listeningAddress + ":" + listeningPort
+	address := listeningAddress + ":" + listeningPort
 	log.Fatal(http.ListenAndServe(address, nil))
 }
