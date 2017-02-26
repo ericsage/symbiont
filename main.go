@@ -11,6 +11,7 @@ import (
 
 	"github.com/ericsage/symbiont/cx"
 	"github.com/ericsage/symbiont/cyservice"
+	"github.com/golang/protobuf/jsonpb"
 	"google.golang.org/grpc"
 )
 
@@ -44,28 +45,28 @@ func streamNetwork(network io.ReadCloser, out http.ResponseWriter) {
 				nodeAttr := &cyservice.NodeAttribute{}
 				edgeAttr := &cyservice.EdgeAttribute{}
 				networkAttr := &cyservice.NetworkAttribute{}
-				decoder.RegisterAspectHandler("nodes", func(j *json.RawMessage) {
-					json.Unmarshal(*j, node)
+				decoder.RegisterAspectHandler("nodes", func(d *json.Decoder) {
+					jsonpb.UnmarshalNext(d, node)
 					frag := &cyservice.Fragment{Element: &cyservice.Fragment_Node{node}}
 					stream.Send(frag)
 				})
-				decoder.RegisterAspectHandler("edges", func(j *json.RawMessage) {
-					json.Unmarshal(*j, edge)
+				decoder.RegisterAspectHandler("edges", func(d *json.Decoder) {
+					jsonpb.UnmarshalNext(d, edge)
 					frag := &cyservice.Fragment{Element: &cyservice.Fragment_Edge{edge}}
 					stream.Send(frag)
 				})
-				decoder.RegisterAspectHandler("nodeAttributes", func(j *json.RawMessage) {
-					json.Unmarshal(*j, nodeAttr)
+				decoder.RegisterAspectHandler("nodeAttributes", func(d *json.Decoder) {
+					jsonpb.UnmarshalNext(d, nodeAttr)
 					frag := &cyservice.Fragment{Element: &cyservice.Fragment_NodeAttribute{nodeAttr}}
 					stream.Send(frag)
 				})
-				decoder.RegisterAspectHandler("edgeAttributes", func(j *json.RawMessage) {
-					json.Unmarshal(*j, edgeAttr)
+				decoder.RegisterAspectHandler("edgeAttributes", func(d *json.Decoder) {
+					jsonpb.UnmarshalNext(d, edgeAttr)
 					frag := &cyservice.Fragment{Element: &cyservice.Fragment_EdgeAttribute{edgeAttr}}
 					stream.Send(frag)
 				})
-				decoder.RegisterAspectHandler("networkAttributes", func(j *json.RawMessage) {
-					json.Unmarshal(*j, networkAttr)
+				decoder.RegisterAspectHandler("networkAttributes", func(d *json.Decoder) {
+					jsonpb.UnmarshalNext(d, networkAttr)
 					frag := &cyservice.Fragment{Element: &cyservice.Fragment_NetworkAttribute{networkAttr}}
 					stream.Send(frag)
 				})
@@ -79,11 +80,12 @@ func streamNetwork(network io.ReadCloser, out http.ResponseWriter) {
 				encoder := json.NewEncoder(out)
 				for {
 					in, err := stream.Recv()
-					encoder.Encode(in.Element)
 					if err == io.EOF {
 						close(waitc2)
 						return
-					}
+					} else {
+					  encoder.Encode(in.Element)
+				  }
 				}
 			}()
 			<-waitc

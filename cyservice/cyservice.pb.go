@@ -10,6 +10,7 @@ It is generated from these files:
 
 It has these top-level messages:
 	Fragment
+	NumberVerification
 	MetaData
 	KeyValue
 	Node
@@ -17,6 +18,7 @@ It has these top-level messages:
 	NodeAttribute
 	EdgeAttribute
 	NetworkAttribute
+	CartesianLayout
 	AnonymousAspect
 */
 package cyservice
@@ -43,13 +45,15 @@ const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type Fragment struct {
 	// Types that are valid to be assigned to Element:
+	//	*Fragment_NumberVerification
 	//	*Fragment_Metadata
+	//	*Fragment_Aspect
 	//	*Fragment_Node
 	//	*Fragment_Edge
 	//	*Fragment_NodeAttribute
 	//	*Fragment_EdgeAttribute
 	//	*Fragment_NetworkAttribute
-	//	*Fragment_Aspect
+	//	*Fragment_CartesianLayout
 	Element isFragment_Element `protobuf_oneof:"element"`
 }
 
@@ -62,35 +66,43 @@ type isFragment_Element interface {
 	isFragment_Element()
 }
 
+type Fragment_NumberVerification struct {
+	NumberVerification *NumberVerification `protobuf:"bytes,1,opt,name=numberVerification,oneof"`
+}
 type Fragment_Metadata struct {
-	Metadata *MetaData `protobuf:"bytes,1,opt,name=metadata,oneof"`
-}
-type Fragment_Node struct {
-	Node *Node `protobuf:"bytes,2,opt,name=node,oneof"`
-}
-type Fragment_Edge struct {
-	Edge *Edge `protobuf:"bytes,3,opt,name=edge,oneof"`
-}
-type Fragment_NodeAttribute struct {
-	NodeAttribute *NodeAttribute `protobuf:"bytes,4,opt,name=nodeAttribute,oneof"`
-}
-type Fragment_EdgeAttribute struct {
-	EdgeAttribute *EdgeAttribute `protobuf:"bytes,5,opt,name=edgeAttribute,oneof"`
-}
-type Fragment_NetworkAttribute struct {
-	NetworkAttribute *NetworkAttribute `protobuf:"bytes,6,opt,name=networkAttribute,oneof"`
+	Metadata *MetaData `protobuf:"bytes,2,opt,name=metadata,oneof"`
 }
 type Fragment_Aspect struct {
-	Aspect *AnonymousAspect `protobuf:"bytes,7,opt,name=aspect,oneof"`
+	Aspect *AnonymousAspect `protobuf:"bytes,3,opt,name=aspect,oneof"`
+}
+type Fragment_Node struct {
+	Node *Node `protobuf:"bytes,4,opt,name=node,oneof"`
+}
+type Fragment_Edge struct {
+	Edge *Edge `protobuf:"bytes,5,opt,name=edge,oneof"`
+}
+type Fragment_NodeAttribute struct {
+	NodeAttribute *NodeAttribute `protobuf:"bytes,6,opt,name=nodeAttribute,oneof"`
+}
+type Fragment_EdgeAttribute struct {
+	EdgeAttribute *EdgeAttribute `protobuf:"bytes,7,opt,name=edgeAttribute,oneof"`
+}
+type Fragment_NetworkAttribute struct {
+	NetworkAttribute *NetworkAttribute `protobuf:"bytes,8,opt,name=networkAttribute,oneof"`
+}
+type Fragment_CartesianLayout struct {
+	CartesianLayout *CartesianLayout `protobuf:"bytes,9,opt,name=cartesianLayout,oneof"`
 }
 
-func (*Fragment_Metadata) isFragment_Element()         {}
-func (*Fragment_Node) isFragment_Element()             {}
-func (*Fragment_Edge) isFragment_Element()             {}
-func (*Fragment_NodeAttribute) isFragment_Element()    {}
-func (*Fragment_EdgeAttribute) isFragment_Element()    {}
-func (*Fragment_NetworkAttribute) isFragment_Element() {}
-func (*Fragment_Aspect) isFragment_Element()           {}
+func (*Fragment_NumberVerification) isFragment_Element() {}
+func (*Fragment_Metadata) isFragment_Element()           {}
+func (*Fragment_Aspect) isFragment_Element()             {}
+func (*Fragment_Node) isFragment_Element()               {}
+func (*Fragment_Edge) isFragment_Element()               {}
+func (*Fragment_NodeAttribute) isFragment_Element()      {}
+func (*Fragment_EdgeAttribute) isFragment_Element()      {}
+func (*Fragment_NetworkAttribute) isFragment_Element()   {}
+func (*Fragment_CartesianLayout) isFragment_Element()    {}
 
 func (m *Fragment) GetElement() isFragment_Element {
 	if m != nil {
@@ -99,9 +111,23 @@ func (m *Fragment) GetElement() isFragment_Element {
 	return nil
 }
 
+func (m *Fragment) GetNumberVerification() *NumberVerification {
+	if x, ok := m.GetElement().(*Fragment_NumberVerification); ok {
+		return x.NumberVerification
+	}
+	return nil
+}
+
 func (m *Fragment) GetMetadata() *MetaData {
 	if x, ok := m.GetElement().(*Fragment_Metadata); ok {
 		return x.Metadata
+	}
+	return nil
+}
+
+func (m *Fragment) GetAspect() *AnonymousAspect {
+	if x, ok := m.GetElement().(*Fragment_Aspect); ok {
+		return x.Aspect
 	}
 	return nil
 }
@@ -141,9 +167,9 @@ func (m *Fragment) GetNetworkAttribute() *NetworkAttribute {
 	return nil
 }
 
-func (m *Fragment) GetAspect() *AnonymousAspect {
-	if x, ok := m.GetElement().(*Fragment_Aspect); ok {
-		return x.Aspect
+func (m *Fragment) GetCartesianLayout() *CartesianLayout {
+	if x, ok := m.GetElement().(*Fragment_CartesianLayout); ok {
+		return x.CartesianLayout
 	}
 	return nil
 }
@@ -151,13 +177,15 @@ func (m *Fragment) GetAspect() *AnonymousAspect {
 // XXX_OneofFuncs is for the internal use of the proto package.
 func (*Fragment) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
 	return _Fragment_OneofMarshaler, _Fragment_OneofUnmarshaler, _Fragment_OneofSizer, []interface{}{
+		(*Fragment_NumberVerification)(nil),
 		(*Fragment_Metadata)(nil),
+		(*Fragment_Aspect)(nil),
 		(*Fragment_Node)(nil),
 		(*Fragment_Edge)(nil),
 		(*Fragment_NodeAttribute)(nil),
 		(*Fragment_EdgeAttribute)(nil),
 		(*Fragment_NetworkAttribute)(nil),
-		(*Fragment_Aspect)(nil),
+		(*Fragment_CartesianLayout)(nil),
 	}
 }
 
@@ -165,39 +193,49 @@ func _Fragment_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	m := msg.(*Fragment)
 	// element
 	switch x := m.Element.(type) {
-	case *Fragment_Metadata:
+	case *Fragment_NumberVerification:
 		b.EncodeVarint(1<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.NumberVerification); err != nil {
+			return err
+		}
+	case *Fragment_Metadata:
+		b.EncodeVarint(2<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.Metadata); err != nil {
 			return err
 		}
+	case *Fragment_Aspect:
+		b.EncodeVarint(3<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Aspect); err != nil {
+			return err
+		}
 	case *Fragment_Node:
-		b.EncodeVarint(2<<3 | proto.WireBytes)
+		b.EncodeVarint(4<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.Node); err != nil {
 			return err
 		}
 	case *Fragment_Edge:
-		b.EncodeVarint(3<<3 | proto.WireBytes)
+		b.EncodeVarint(5<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.Edge); err != nil {
 			return err
 		}
 	case *Fragment_NodeAttribute:
-		b.EncodeVarint(4<<3 | proto.WireBytes)
+		b.EncodeVarint(6<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.NodeAttribute); err != nil {
 			return err
 		}
 	case *Fragment_EdgeAttribute:
-		b.EncodeVarint(5<<3 | proto.WireBytes)
+		b.EncodeVarint(7<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.EdgeAttribute); err != nil {
 			return err
 		}
 	case *Fragment_NetworkAttribute:
-		b.EncodeVarint(6<<3 | proto.WireBytes)
+		b.EncodeVarint(8<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.NetworkAttribute); err != nil {
 			return err
 		}
-	case *Fragment_Aspect:
-		b.EncodeVarint(7<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.Aspect); err != nil {
+	case *Fragment_CartesianLayout:
+		b.EncodeVarint(9<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.CartesianLayout); err != nil {
 			return err
 		}
 	case nil:
@@ -210,7 +248,15 @@ func _Fragment_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 func _Fragment_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
 	m := msg.(*Fragment)
 	switch tag {
-	case 1: // element.metadata
+	case 1: // element.numberVerification
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(NumberVerification)
+		err := b.DecodeMessage(msg)
+		m.Element = &Fragment_NumberVerification{msg}
+		return true, err
+	case 2: // element.metadata
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -218,7 +264,15 @@ func _Fragment_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Element = &Fragment_Metadata{msg}
 		return true, err
-	case 2: // element.node
+	case 3: // element.aspect
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(AnonymousAspect)
+		err := b.DecodeMessage(msg)
+		m.Element = &Fragment_Aspect{msg}
+		return true, err
+	case 4: // element.node
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -226,7 +280,7 @@ func _Fragment_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Element = &Fragment_Node{msg}
 		return true, err
-	case 3: // element.edge
+	case 5: // element.edge
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -234,7 +288,7 @@ func _Fragment_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Element = &Fragment_Edge{msg}
 		return true, err
-	case 4: // element.nodeAttribute
+	case 6: // element.nodeAttribute
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -242,7 +296,7 @@ func _Fragment_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Element = &Fragment_NodeAttribute{msg}
 		return true, err
-	case 5: // element.edgeAttribute
+	case 7: // element.edgeAttribute
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -250,7 +304,7 @@ func _Fragment_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Element = &Fragment_EdgeAttribute{msg}
 		return true, err
-	case 6: // element.networkAttribute
+	case 8: // element.networkAttribute
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
@@ -258,13 +312,13 @@ func _Fragment_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffe
 		err := b.DecodeMessage(msg)
 		m.Element = &Fragment_NetworkAttribute{msg}
 		return true, err
-	case 7: // element.aspect
+	case 9: // element.cartesianLayout
 		if wire != proto.WireBytes {
 			return true, proto.ErrInternalBadWireType
 		}
-		msg := new(AnonymousAspect)
+		msg := new(CartesianLayout)
 		err := b.DecodeMessage(msg)
-		m.Element = &Fragment_Aspect{msg}
+		m.Element = &Fragment_CartesianLayout{msg}
 		return true, err
 	default:
 		return false, nil
@@ -275,39 +329,49 @@ func _Fragment_OneofSizer(msg proto.Message) (n int) {
 	m := msg.(*Fragment)
 	// element
 	switch x := m.Element.(type) {
-	case *Fragment_Metadata:
-		s := proto.Size(x.Metadata)
+	case *Fragment_NumberVerification:
+		s := proto.Size(x.NumberVerification)
 		n += proto.SizeVarint(1<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
-	case *Fragment_Node:
-		s := proto.Size(x.Node)
+	case *Fragment_Metadata:
+		s := proto.Size(x.Metadata)
 		n += proto.SizeVarint(2<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Fragment_Edge:
-		s := proto.Size(x.Edge)
-		n += proto.SizeVarint(3<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Fragment_NodeAttribute:
-		s := proto.Size(x.NodeAttribute)
-		n += proto.SizeVarint(4<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Fragment_EdgeAttribute:
-		s := proto.Size(x.EdgeAttribute)
-		n += proto.SizeVarint(5<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *Fragment_NetworkAttribute:
-		s := proto.Size(x.NetworkAttribute)
-		n += proto.SizeVarint(6<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case *Fragment_Aspect:
 		s := proto.Size(x.Aspect)
+		n += proto.SizeVarint(3<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Fragment_Node:
+		s := proto.Size(x.Node)
+		n += proto.SizeVarint(4<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Fragment_Edge:
+		s := proto.Size(x.Edge)
+		n += proto.SizeVarint(5<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Fragment_NodeAttribute:
+		s := proto.Size(x.NodeAttribute)
+		n += proto.SizeVarint(6<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Fragment_EdgeAttribute:
+		s := proto.Size(x.EdgeAttribute)
 		n += proto.SizeVarint(7<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Fragment_NetworkAttribute:
+		s := proto.Size(x.NetworkAttribute)
+		n += proto.SizeVarint(8<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Fragment_CartesianLayout:
+		s := proto.Size(x.CartesianLayout)
+		n += proto.SizeVarint(9<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
 	case nil:
@@ -315,6 +379,22 @@ func _Fragment_OneofSizer(msg proto.Message) (n int) {
 		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
 	}
 	return n
+}
+
+type NumberVerification struct {
+	LongNumber int64 `protobuf:"varint,1,opt,name=longNumber" json:"longNumber,omitempty"`
+}
+
+func (m *NumberVerification) Reset()                    { *m = NumberVerification{} }
+func (m *NumberVerification) String() string            { return proto.CompactTextString(m) }
+func (*NumberVerification) ProtoMessage()               {}
+func (*NumberVerification) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+
+func (m *NumberVerification) GetLongNumber() int64 {
+	if m != nil {
+		return m.LongNumber
+	}
+	return 0
 }
 
 type MetaData struct {
@@ -330,7 +410,7 @@ type MetaData struct {
 func (m *MetaData) Reset()                    { *m = MetaData{} }
 func (m *MetaData) String() string            { return proto.CompactTextString(m) }
 func (*MetaData) ProtoMessage()               {}
-func (*MetaData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (*MetaData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
 func (m *MetaData) GetName() string {
 	if m != nil {
@@ -389,7 +469,7 @@ type KeyValue struct {
 func (m *KeyValue) Reset()                    { *m = KeyValue{} }
 func (m *KeyValue) String() string            { return proto.CompactTextString(m) }
 func (*KeyValue) ProtoMessage()               {}
-func (*KeyValue) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+func (*KeyValue) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
 func (m *KeyValue) GetName() string {
 	if m != nil {
@@ -414,7 +494,7 @@ type Node struct {
 func (m *Node) Reset()                    { *m = Node{} }
 func (m *Node) String() string            { return proto.CompactTextString(m) }
 func (*Node) ProtoMessage()               {}
-func (*Node) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+func (*Node) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
 
 func (m *Node) GetId() int64 {
 	if m != nil {
@@ -447,7 +527,7 @@ type Edge struct {
 func (m *Edge) Reset()                    { *m = Edge{} }
 func (m *Edge) String() string            { return proto.CompactTextString(m) }
 func (*Edge) ProtoMessage()               {}
-func (*Edge) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+func (*Edge) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
 
 func (m *Edge) GetId() int64 {
 	if m != nil {
@@ -488,7 +568,7 @@ type NodeAttribute struct {
 func (m *NodeAttribute) Reset()                    { *m = NodeAttribute{} }
 func (m *NodeAttribute) String() string            { return proto.CompactTextString(m) }
 func (*NodeAttribute) ProtoMessage()               {}
-func (*NodeAttribute) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
+func (*NodeAttribute) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
 
 func (m *NodeAttribute) GetNodeId() int64 {
 	if m != nil {
@@ -536,7 +616,7 @@ type EdgeAttribute struct {
 func (m *EdgeAttribute) Reset()                    { *m = EdgeAttribute{} }
 func (m *EdgeAttribute) String() string            { return proto.CompactTextString(m) }
 func (*EdgeAttribute) ProtoMessage()               {}
-func (*EdgeAttribute) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
+func (*EdgeAttribute) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
 
 func (m *EdgeAttribute) GetEdgeId() int64 {
 	if m != nil {
@@ -584,7 +664,7 @@ type NetworkAttribute struct {
 func (m *NetworkAttribute) Reset()                    { *m = NetworkAttribute{} }
 func (m *NetworkAttribute) String() string            { return proto.CompactTextString(m) }
 func (*NetworkAttribute) ProtoMessage()               {}
-func (*NetworkAttribute) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
+func (*NetworkAttribute) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
 
 func (m *NetworkAttribute) GetEdgeId() int64 {
 	if m != nil {
@@ -621,6 +701,46 @@ func (m *NetworkAttribute) GetSubnetId() int64 {
 	return 0
 }
 
+type CartesianLayout struct {
+	Nodeid int64   `protobuf:"varint,1,opt,name=nodeid" json:"nodeid,omitempty"`
+	X      float64 `protobuf:"fixed64,2,opt,name=x" json:"x,omitempty"`
+	Y      float64 `protobuf:"fixed64,3,opt,name=y" json:"y,omitempty"`
+	Viewid int64   `protobuf:"varint,4,opt,name=viewid" json:"viewid,omitempty"`
+}
+
+func (m *CartesianLayout) Reset()                    { *m = CartesianLayout{} }
+func (m *CartesianLayout) String() string            { return proto.CompactTextString(m) }
+func (*CartesianLayout) ProtoMessage()               {}
+func (*CartesianLayout) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{9} }
+
+func (m *CartesianLayout) GetNodeid() int64 {
+	if m != nil {
+		return m.Nodeid
+	}
+	return 0
+}
+
+func (m *CartesianLayout) GetX() float64 {
+	if m != nil {
+		return m.X
+	}
+	return 0
+}
+
+func (m *CartesianLayout) GetY() float64 {
+	if m != nil {
+		return m.Y
+	}
+	return 0
+}
+
+func (m *CartesianLayout) GetViewid() int64 {
+	if m != nil {
+		return m.Viewid
+	}
+	return 0
+}
+
 type AnonymousAspect struct {
 	Type    string `protobuf:"bytes,1,opt,name=type" json:"type,omitempty"`
 	Element []byte `protobuf:"bytes,2,opt,name=element,proto3" json:"element,omitempty"`
@@ -629,7 +749,7 @@ type AnonymousAspect struct {
 func (m *AnonymousAspect) Reset()                    { *m = AnonymousAspect{} }
 func (m *AnonymousAspect) String() string            { return proto.CompactTextString(m) }
 func (*AnonymousAspect) ProtoMessage()               {}
-func (*AnonymousAspect) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
+func (*AnonymousAspect) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{10} }
 
 func (m *AnonymousAspect) GetType() string {
 	if m != nil {
@@ -647,6 +767,7 @@ func (m *AnonymousAspect) GetElement() []byte {
 
 func init() {
 	proto.RegisterType((*Fragment)(nil), "cyservice.Fragment")
+	proto.RegisterType((*NumberVerification)(nil), "cyservice.NumberVerification")
 	proto.RegisterType((*MetaData)(nil), "cyservice.MetaData")
 	proto.RegisterType((*KeyValue)(nil), "cyservice.KeyValue")
 	proto.RegisterType((*Node)(nil), "cyservice.Node")
@@ -654,6 +775,7 @@ func init() {
 	proto.RegisterType((*NodeAttribute)(nil), "cyservice.NodeAttribute")
 	proto.RegisterType((*EdgeAttribute)(nil), "cyservice.EdgeAttribute")
 	proto.RegisterType((*NetworkAttribute)(nil), "cyservice.NetworkAttribute")
+	proto.RegisterType((*CartesianLayout)(nil), "cyservice.CartesianLayout")
 	proto.RegisterType((*AnonymousAspect)(nil), "cyservice.AnonymousAspect")
 }
 
@@ -764,42 +886,49 @@ var _CyService_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("cyservice.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 583 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xb4, 0x54, 0xc1, 0x6e, 0xd3, 0x40,
-	0x10, 0xb5, 0x6b, 0x37, 0xb1, 0xa7, 0xad, 0x1c, 0x6d, 0x01, 0x59, 0x81, 0x43, 0x65, 0x09, 0xa9,
-	0xe2, 0x50, 0x41, 0xdb, 0x7b, 0x1b, 0x4a, 0x21, 0x11, 0xa2, 0x87, 0xad, 0x84, 0xc4, 0x71, 0x63,
-	0x8f, 0x82, 0xd5, 0x78, 0xd7, 0xda, 0x5d, 0x07, 0xf9, 0x5b, 0xf8, 0x50, 0xae, 0x68, 0x37, 0x76,
-	0xe2, 0xc4, 0xbd, 0xf6, 0xe6, 0x7d, 0xf3, 0xe6, 0xcd, 0xec, 0xcc, 0x5b, 0x43, 0x94, 0xd6, 0x0a,
-	0xe5, 0x2a, 0x4f, 0xf1, 0xa2, 0x94, 0x42, 0x0b, 0x12, 0x6e, 0x80, 0xe4, 0xaf, 0x07, 0xc1, 0x57,
-	0xc9, 0x16, 0x05, 0x72, 0x4d, 0x3e, 0x41, 0x50, 0xa0, 0x66, 0x19, 0xd3, 0x2c, 0x76, 0xcf, 0xdc,
-	0xf3, 0xa3, 0xcb, 0xd3, 0x8b, 0x6d, 0xee, 0x0f, 0xd4, 0xec, 0x0b, 0xd3, 0x6c, 0xea, 0xd0, 0x0d,
-	0x8d, 0xbc, 0x07, 0x9f, 0x8b, 0x0c, 0xe3, 0x03, 0x4b, 0x8f, 0x3a, 0xf4, 0x07, 0x91, 0xe1, 0xd4,
-	0xa1, 0x36, 0x6c, 0x68, 0x98, 0x2d, 0x30, 0xf6, 0x7a, 0xb4, 0xfb, 0x6c, 0x61, 0x69, 0x26, 0x4c,
-	0x6e, 0xe1, 0xc4, 0xd0, 0x27, 0x5a, 0xcb, 0x7c, 0x5e, 0x69, 0x8c, 0x7d, 0xcb, 0x8f, 0xf7, 0x64,
-	0x37, 0xf1, 0xa9, 0x43, 0x77, 0x13, 0x8c, 0x82, 0x51, 0xda, 0x2a, 0x1c, 0xf6, 0x14, 0xee, 0xbb,
-	0x71, 0xa3, 0xb0, 0x93, 0x40, 0x66, 0x30, 0xe2, 0xa8, 0xff, 0x08, 0xf9, 0xb4, 0x15, 0x19, 0x58,
-	0x91, 0xb7, 0xdd, 0x36, 0xf6, 0x28, 0x53, 0x87, 0xf6, 0xd2, 0xc8, 0x35, 0x0c, 0x98, 0x2a, 0x31,
-	0xd5, 0xf1, 0xd0, 0x0a, 0x8c, 0x3b, 0x02, 0x13, 0x2e, 0x78, 0x5d, 0x88, 0x4a, 0x4d, 0x2c, 0x63,
-	0xea, 0xd0, 0x86, 0xfb, 0x39, 0x84, 0x21, 0x2e, 0xd1, 0x2c, 0x24, 0xf9, 0xe7, 0x42, 0xd0, 0x8e,
-	0x9d, 0x10, 0xf0, 0x39, 0x2b, 0xd0, 0x6e, 0x26, 0xa4, 0xf6, 0x9b, 0xc4, 0x30, 0x5c, 0xa1, 0x54,
-	0xb9, 0xe0, 0x76, 0x03, 0x21, 0x6d, 0x8f, 0xe4, 0x1d, 0x84, 0x79, 0x76, 0x27, 0x2a, 0xae, 0x51,
-	0xda, 0xb1, 0x7b, 0x74, 0x0b, 0x90, 0x04, 0x8e, 0x9b, 0x1a, 0x16, 0xb1, 0x73, 0xf6, 0xe8, 0x0e,
-	0x46, 0x3e, 0xc0, 0x28, 0x15, 0x5c, 0xe5, 0x4a, 0x23, 0x4f, 0xeb, 0x6f, 0x52, 0x54, 0xa5, 0x9d,
-	0xa6, 0x47, 0x7b, 0x38, 0x19, 0x43, 0x90, 0xfe, 0xc6, 0xf4, 0x49, 0x55, 0x85, 0x1d, 0x96, 0x47,
-	0x37, 0x67, 0x72, 0x05, 0x50, 0x4a, 0x51, 0xa2, 0xd4, 0x39, 0xaa, 0x78, 0x78, 0xe6, 0xed, 0xf9,
-	0xea, 0x3b, 0xd6, 0x3f, 0xd9, 0xb2, 0x42, 0xda, 0xa1, 0x25, 0xd7, 0x10, 0xb4, 0xf8, 0xb3, 0x17,
-	0x7f, 0x05, 0x87, 0x2b, 0x13, 0x6c, 0xae, 0xbd, 0x3e, 0x24, 0x37, 0xe0, 0x1b, 0x7f, 0x90, 0x08,
-	0x0e, 0xf2, 0xcc, 0xf2, 0x3d, 0xea, 0xdd, 0xe6, 0x19, 0x89, 0x1a, 0x89, 0x35, 0xdb, 0xe5, 0xe4,
-	0x35, 0x80, 0xc4, 0x52, 0xa2, 0x42, 0xae, 0x95, 0x9d, 0x4f, 0x48, 0x5d, 0x99, 0xfc, 0x02, 0xdf,
-	0xd8, 0xa3, 0x2f, 0x70, 0x0a, 0x81, 0x12, 0x95, 0x4c, 0x71, 0x96, 0x59, 0x11, 0x8f, 0xba, 0xca,
-	0x80, 0x9a, 0xc9, 0x05, 0xea, 0x59, 0xd6, 0x8c, 0xd8, 0xd5, 0xe4, 0x0d, 0x1c, 0xe5, 0x66, 0xc6,
-	0x2c, 0xd5, 0x66, 0x2d, 0xfe, 0x5a, 0x3a, 0x4f, 0x96, 0x70, 0xb2, 0xe3, 0x5d, 0x42, 0x60, 0x60,
-	0xbc, 0x3b, 0x6b, 0xeb, 0x1c, 0x94, 0xa2, 0xdf, 0xe7, 0xa8, 0xbd, 0x67, 0xd3, 0xe2, 0xca, 0x50,
-	0x74, 0x5d, 0x62, 0x2b, 0xbc, 0x6e, 0xad, 0x9a, 0x73, 0xdb, 0xc5, 0x61, 0xd3, 0x9a, 0xa9, 0xb6,
-	0xe3, 0x73, 0x53, 0xcd, 0xf8, 0xfc, 0x65, 0xaa, 0x09, 0x18, 0xed, 0x3f, 0x88, 0x97, 0x2d, 0x78,
-	0x03, 0xd1, 0xde, 0x03, 0x32, 0x2e, 0xb1, 0x89, 0x8d, 0x4b, 0xcc, 0xb7, 0x79, 0x1e, 0x8d, 0xa5,
-	0x6d, 0xc9, 0x63, 0xda, 0x1e, 0x2f, 0x1f, 0x20, 0xbc, 0xab, 0x1f, 0xd7, 0x0e, 0x24, 0x13, 0x88,
-	0x1e, 0xb5, 0x44, 0x56, 0xb4, 0x7f, 0x42, 0x45, 0xba, 0x06, 0x6d, 0xd1, 0xf1, 0x73, 0x60, 0xe2,
-	0x9c, 0xbb, 0x1f, 0xdd, 0xf9, 0xc0, 0xfe, 0x59, 0xaf, 0xfe, 0x07, 0x00, 0x00, 0xff, 0xff, 0xa6,
-	0xf7, 0xbf, 0xc8, 0x6c, 0x05, 0x00, 0x00,
+	// 695 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xb4, 0x55, 0x4d, 0x4f, 0xdb, 0x40,
+	0x10, 0xb5, 0xe3, 0x90, 0x8f, 0x01, 0xe4, 0x68, 0x69, 0x91, 0x45, 0x3f, 0x84, 0x2c, 0x55, 0x42,
+	0x3d, 0xa0, 0x16, 0xb8, 0x43, 0x4a, 0xa1, 0x89, 0xda, 0x52, 0x69, 0x91, 0x90, 0x7a, 0xe8, 0x61,
+	0x63, 0x4f, 0xd3, 0x15, 0xc9, 0xae, 0xb5, 0x5e, 0x07, 0xfc, 0xbf, 0xfa, 0xdf, 0x7a, 0xad, 0x76,
+	0x63, 0x27, 0x8e, 0xcd, 0x95, 0x9b, 0xe7, 0xed, 0x9b, 0x37, 0xe3, 0xd9, 0x37, 0x36, 0xf8, 0x51,
+	0x9e, 0xa2, 0x5a, 0xf0, 0x08, 0x8f, 0x13, 0x25, 0xb5, 0x24, 0xfd, 0x15, 0x10, 0xfe, 0x6d, 0x43,
+	0xef, 0x5a, 0xb1, 0xe9, 0x1c, 0x85, 0x26, 0x3f, 0x80, 0x88, 0x6c, 0x3e, 0x41, 0x75, 0x87, 0x8a,
+	0xff, 0xe6, 0x11, 0xd3, 0x5c, 0x8a, 0xc0, 0x3d, 0x74, 0x8f, 0xb6, 0x4f, 0xde, 0x1c, 0xaf, 0x55,
+	0x6e, 0x1a, 0xa4, 0x91, 0x43, 0x9f, 0x48, 0x25, 0x1f, 0xa1, 0x37, 0x47, 0xcd, 0x62, 0xa6, 0x59,
+	0xd0, 0xb2, 0x32, 0x7b, 0x15, 0x99, 0xef, 0xa8, 0xd9, 0x67, 0xa6, 0xd9, 0xc8, 0xa1, 0x2b, 0x1a,
+	0x39, 0x83, 0x0e, 0x4b, 0x13, 0x8c, 0x74, 0xe0, 0xd9, 0x84, 0x83, 0x4a, 0xc2, 0x50, 0x48, 0x91,
+	0xcf, 0x65, 0x96, 0x0e, 0x2d, 0x63, 0xe4, 0xd0, 0x82, 0x4b, 0xde, 0x41, 0x5b, 0xc8, 0x18, 0x83,
+	0xb6, 0xcd, 0xf1, 0xab, 0xbd, 0xca, 0x18, 0x47, 0x0e, 0xb5, 0xc7, 0x86, 0x86, 0xf1, 0x14, 0x83,
+	0xad, 0x06, 0xed, 0x2a, 0x9e, 0x5a, 0x9a, 0x39, 0x26, 0x17, 0xb0, 0x6b, 0xe8, 0x43, 0xad, 0x15,
+	0x9f, 0x64, 0x1a, 0x83, 0x8e, 0xe5, 0x07, 0x35, 0xd9, 0xd5, 0xf9, 0xc8, 0xa1, 0x9b, 0x09, 0x46,
+	0xc1, 0x28, 0xad, 0x15, 0xba, 0x0d, 0x85, 0xab, 0xea, 0xb9, 0x51, 0xd8, 0x48, 0x20, 0x63, 0x18,
+	0x08, 0xd4, 0x0f, 0x52, 0xdd, 0xaf, 0x45, 0x7a, 0x56, 0xe4, 0x55, 0xb5, 0x8d, 0x1a, 0x65, 0xe4,
+	0xd0, 0x46, 0x1a, 0xb9, 0x06, 0x3f, 0x62, 0x4a, 0x63, 0xca, 0x99, 0xf8, 0xc6, 0x72, 0x99, 0xe9,
+	0xa0, 0xdf, 0x98, 0xed, 0xe5, 0x26, 0x63, 0xe4, 0xd0, 0x7a, 0xd2, 0xa7, 0x3e, 0x74, 0x71, 0x86,
+	0xc6, 0x29, 0xe1, 0x19, 0x90, 0xa6, 0x09, 0xc8, 0x5b, 0x80, 0x99, 0x14, 0xd3, 0xe5, 0x89, 0xf5,
+	0x8d, 0x47, 0x2b, 0x48, 0xf8, 0xcf, 0x85, 0x5e, 0x79, 0xe9, 0x84, 0x40, 0x5b, 0xb0, 0x39, 0x5a,
+	0x5a, 0x9f, 0xda, 0x67, 0x12, 0x40, 0x77, 0x81, 0x2a, 0x35, 0xae, 0x6b, 0x59, 0xb8, 0x0c, 0xc9,
+	0x6b, 0xe8, 0xf3, 0xf8, 0x52, 0x66, 0x42, 0xa3, 0xb2, 0xce, 0xf0, 0xe8, 0x1a, 0x20, 0x21, 0xec,
+	0x14, 0x9d, 0x59, 0xc4, 0xda, 0xc0, 0xa3, 0x1b, 0x18, 0x79, 0x0f, 0x83, 0x48, 0x8a, 0x94, 0xa7,
+	0x1a, 0x45, 0x94, 0x7f, 0x51, 0x32, 0x4b, 0xac, 0x0f, 0x3c, 0xda, 0xc0, 0xc9, 0x01, 0xf4, 0xa2,
+	0x3f, 0x18, 0xdd, 0xa7, 0xd9, 0xdc, 0xde, 0xbd, 0x47, 0x57, 0x31, 0x39, 0x05, 0x48, 0x94, 0x4c,
+	0x50, 0x69, 0x8e, 0x69, 0xd0, 0x3d, 0xf4, 0x6a, 0xae, 0xfe, 0x8a, 0xf9, 0x1d, 0x9b, 0x65, 0x48,
+	0x2b, 0xb4, 0xf0, 0x0c, 0x7a, 0x25, 0xfe, 0xe4, 0x8b, 0xbf, 0x80, 0xad, 0x85, 0x39, 0x2c, 0x5e,
+	0x7b, 0x19, 0x84, 0xe7, 0xd0, 0x36, 0x3e, 0x23, 0x3e, 0xb4, 0x78, 0x5c, 0xcc, 0xd3, 0xbb, 0xe0,
+	0x31, 0xf1, 0x0b, 0x89, 0x25, 0xdb, 0x15, 0xe4, 0x25, 0x80, 0xc2, 0x44, 0x61, 0x8a, 0x42, 0xa7,
+	0x76, 0x3e, 0x7d, 0xea, 0xaa, 0xf0, 0x27, 0xb4, 0x8d, 0xcd, 0x9a, 0x02, 0x7b, 0xd0, 0x4b, 0x65,
+	0xa6, 0x22, 0x1c, 0xc7, 0x56, 0xc4, 0xa3, 0x6e, 0x6a, 0x40, 0xcd, 0xd4, 0x14, 0xf5, 0x38, 0x2e,
+	0x46, 0xec, 0x6a, 0xb2, 0x0f, 0xdb, 0xdc, 0xcc, 0x98, 0x45, 0xf6, 0x63, 0xd0, 0x5e, 0x4a, 0xf3,
+	0x70, 0x06, 0xbb, 0x1b, 0x3b, 0x40, 0x08, 0x74, 0xcc, 0x0e, 0x8c, 0xcb, 0x3a, 0xad, 0x44, 0x36,
+	0xfb, 0x1c, 0x94, 0xef, 0x59, 0xb4, 0xb8, 0x30, 0x14, 0x9d, 0x27, 0x58, 0x0a, 0x2f, 0x5b, 0xcb,
+	0x26, 0xc2, 0x76, 0xb1, 0x55, 0xb4, 0x66, 0xaa, 0x6d, 0xec, 0x8b, 0xa9, 0x66, 0xf6, 0xe5, 0x79,
+	0xaa, 0x49, 0x18, 0xd4, 0x17, 0xeb, 0x79, 0x0b, 0xfe, 0x02, 0xbf, 0xb6, 0x7f, 0x64, 0x7f, 0x39,
+	0xce, 0xd5, 0xb5, 0x15, 0x11, 0xd9, 0x01, 0xf7, 0xd1, 0x16, 0x74, 0xa9, 0xfb, 0x68, 0xa2, 0xdc,
+	0x16, 0x73, 0xa9, 0x9b, 0x9b, 0x9c, 0x05, 0xc7, 0x07, 0x1e, 0x17, 0x0b, 0x50, 0x44, 0xe1, 0x39,
+	0xf8, 0xb5, 0x4f, 0xa7, 0x31, 0xa1, 0xed, 0xab, 0x30, 0xa1, 0x79, 0x36, 0xdb, 0x57, 0x6c, 0x8c,
+	0x2d, 0xb0, 0x43, 0xcb, 0xf0, 0xe4, 0x06, 0xfa, 0x97, 0xf9, 0xed, 0xd2, 0xe0, 0x64, 0x08, 0xfe,
+	0xad, 0x56, 0xc8, 0xe6, 0xe5, 0x7f, 0x23, 0x25, 0x55, 0xff, 0x97, 0xe8, 0xc1, 0x53, 0x60, 0xe8,
+	0x1c, 0xb9, 0x1f, 0xdc, 0x49, 0xc7, 0xfe, 0x87, 0x4e, 0xff, 0x07, 0x00, 0x00, 0xff, 0xff, 0x72,
+	0x71, 0xe4, 0x26, 0x9a, 0x06, 0x00, 0x00,
 }

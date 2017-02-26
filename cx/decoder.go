@@ -8,14 +8,14 @@ import (
 )
 
 type Decoder struct {
-	Handlers map[string]func(*json.RawMessage)
+	Handlers map[string]func(*json.Decoder)
 }
 
 func NewDecoder() *Decoder {
-	return &Decoder{Handlers: map[string]func(*json.RawMessage){}}
+	return &Decoder{Handlers: map[string]func(*json.Decoder){}}
 }
 
-func (d *Decoder) RegisterAspectHandler(aspectName string, handler func(*json.RawMessage)) {
+func (d *Decoder) RegisterAspectHandler(aspectName string, handler func(*json.Decoder)) {
 	d.Handlers[aspectName] = handler
 }
 
@@ -50,20 +50,15 @@ func (d *Decoder) parseFragment(frag map[string]*json.RawMessage) {
 	}
 }
 
-func parseElements(eles *json.RawMessage, handler func(*json.RawMessage)) {
+func parseElements(eles *json.RawMessage, handler func(*json.Decoder)) {
 	buf := bytes.NewBuffer(*eles)
 	dec := json.NewDecoder(buf)
 	//Remove opening array [
 	stripDelimiter(dec)
 	//Parse every fragment in the array
 	for dec.More() {
-		var ele *json.RawMessage
-		err := dec.Decode(&ele)
-		if err != nil {
-			panic(err)
-		}
 		//Handle element
-		handler(ele)
+		handler(dec)
 	}
 	//Remove closing array ]
 	stripDelimiter(dec)

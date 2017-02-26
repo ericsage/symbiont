@@ -8,14 +8,20 @@ service CyService {
 
 message Fragment {
   oneof element {
-    MetaData metadata = 1;
-    Node node = 2;
-    Edge edge = 3;
-    NodeAttribute nodeAttribute = 4;
-    EdgeAttribute edgeAttribute = 5;
-    NetworkAttribute networkAttribute = 6;
-    AnonymousAspect aspect = 7;
+    NumberVerification numberVerification = 1;
+    MetaData metadata = 2;
+    AnonymousAspect aspect = 3;
+    Node node = 4;
+    Edge edge = 5;
+    NodeAttribute nodeAttribute = 6;
+    EdgeAttribute edgeAttribute = 7;
+    NetworkAttribute networkAttribute = 8;
+    CartesianLayout cartesianLayout = 9;
   }
+}
+
+message NumberVerification {
+  int64 longNumber = 1;
 }
 
 message MetaData {
@@ -68,6 +74,13 @@ message NetworkAttribute {
   string value = 3 [ json_name = "v" ];
   string type = 4 [ json_name = "d" ];
   int64 subnetId = 5 [ json_name = "s" ];
+}
+
+message CartesianLayout {
+  int64 nodeid = 1;
+  double x = 2;
+  double y = 3;
+  int64 viewid = 4;
 }
 
 message AnonymousAspect {
