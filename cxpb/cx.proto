@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package cyservice;
+package cxpb;
 
 service CyService {
   rpc StreamFragments (stream Fragment) returns (stream Fragment) {}
@@ -10,13 +10,14 @@ message Fragment {
   oneof element {
     NumberVerification numberVerification = 1;
     MetaData metadata = 2;
-    AnonymousAspect aspect = 3;
-    Node node = 4;
-    Edge edge = 5;
-    NodeAttribute nodeAttribute = 6;
-    EdgeAttribute edgeAttribute = 7;
-    NetworkAttribute networkAttribute = 8;
-    CartesianLayout cartesianLayout = 9;
+    Parameter parameter = 3;
+    AnonymousAspect aspect = 4;
+    Node node = 5;
+    Edge edge = 6;
+    NodeAttribute nodeAttribute = 7;
+    EdgeAttribute edgeAttribute = 8;
+    NetworkAttribute networkAttribute = 9;
+    CartesianLayout cartesianLayout = 10;
   }
 }
 
@@ -35,6 +36,11 @@ message MetaData {
 }
 
 message KeyValue {
+  string name = 1;
+  string value = 2;
+}
+
+message Parameter {
   string name = 1;
   string value = 2;
 }

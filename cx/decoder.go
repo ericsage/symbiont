@@ -3,8 +3,8 @@ package cx
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
+	"fmt"
 )
 
 type Decoder struct {
@@ -43,10 +43,10 @@ func (d *Decoder) Decode(cx io.ReadCloser) error {
 
 func (d *Decoder) parseFragment(frag map[string]*json.RawMessage) {
 	for name, elements := range frag {
+		fmt.Println("Found fragment key", name)
 		if handler, ok := d.Handlers[name]; ok {
 			parseElements(elements, handler)
 		}
-		fmt.Println("Finished parsing ", name)
 	}
 }
 
